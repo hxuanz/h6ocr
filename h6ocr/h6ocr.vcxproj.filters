@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\server">
+      <UniqueIdentifier>{734f0303-86a6-46b1-89f0-6df64bc10bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\jsoncpp">
+      <UniqueIdentifier>{6f94e15b-ae48-436a-aa3d-a6d0a517d996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\server">
+      <UniqueIdentifier>{b692ecd8-f50b-47f0-80aa-a320c6e60ad9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="server\connection.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\connection_manager.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\header.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\mime_types.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\reply.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\request.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\request_handler.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\request_parser.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="server\server.hpp">
+      <Filter>头文件\server</Filter>
+    </ClInclude>
+    <ClInclude Include="api_ocr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base64.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="err.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="server\connection.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\connection_manager.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\mime_types.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\reply.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\request_handler.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\request_parser.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server.cpp">
+      <Filter>源文件\server</Filter>
+    </ClCompile>
+    <ClCompile Include="api_ocr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="base64.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_reader.cpp">
+      <Filter>源文件\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_value.cpp">
+      <Filter>源文件\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_writer.cpp">
+      <Filter>源文件\jsoncpp</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

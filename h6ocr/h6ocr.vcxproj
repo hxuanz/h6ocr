@@ -154,7 +154,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="api_ocr.h" />
+    <ClInclude Include="blood_ocr.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="server\connection.hpp" />
@@ -176,7 +176,7 @@
     <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_reader.cpp" />
     <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_value.cpp" />
     <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_writer.cpp" />
-    <ClCompile Include="api_ocr.cpp" />
+    <ClCompile Include="blood_ocr.cpp" />
     <ClCompile Include="base64.cpp" />
     <ClCompile Include="common.cpp" />
     <ClCompile Include="main.cpp" />
@@ -190,6 +190,9 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="uri_codec.cpp" />
     <ClCompile Include="util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="blood.dict" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

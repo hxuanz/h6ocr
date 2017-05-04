@@ -9,9 +9,13 @@ using namespace std;
 //#define DEBUG_MODE
 
 #ifdef DEBUG_MODE
+
+#include "base64.h"
+#include "blood_ocr.h"
+#include "json\json.h"
 int main(int argc, char* argv[])
 {
-	string data;
+	std::vector<uchar> buffer;
 	{
 		string path = "D://ocr//1.jpg";
 		ifstream fileInput(path, ios_base::binary);
@@ -25,16 +29,21 @@ int main(int argc, char* argv[])
 		char *pic = new char[maxSize];
 		fileInput.read(pic, maxSize);
 
-		data.assign((uchar*)pic, (uchar*)pic + maxSize);
+		buffer.assign((uchar*)pic, (uchar*)pic + maxSize);
 		delete[] pic;
 		fileInput.close();
 	}
-
-	Master* master = Master::getInstance();
-	string result;
-	data = base64_encode((uchar const*)data.c_str(), data.size());
-	master->distribute("/ocr", params, data, result);
-	master->release();
+	Blood_OCR& bloodocr = Blood_OCR::Instance();//
+	int ret = bloodocr.recognise(buffer); /* µ÷ÓÃocr api */
+	if (ret != 0)
+	{
+		cerr << ret << endl;
+		return -1;
+	}
+	Json::Value result_root;
+	bloodocr.retrieve(result_root);
+	Json::FastWriter writer;
+	string result = writer.write(result_root);
 
 	cout << result;
 	cv::waitKey(0);

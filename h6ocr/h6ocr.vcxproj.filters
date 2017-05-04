@@ -60,9 +60,6 @@
     <ClInclude Include="server\server.hpp">
       <Filter>头文件\server</Filter>
     </ClInclude>
-    <ClInclude Include="api_ocr.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="base64.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -76,6 +73,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="uri_codec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="blood_ocr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,9 +104,6 @@
     <ClCompile Include="server\server.cpp">
       <Filter>源文件\server</Filter>
     </ClCompile>
-    <ClCompile Include="api_ocr.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="base64.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -131,5 +128,13 @@
     <ClCompile Include="uri_codec.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="blood_ocr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="blood.dict">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

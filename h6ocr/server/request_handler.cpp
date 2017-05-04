@@ -9,8 +9,7 @@
 
 #include <unordered_map>
 #include "../base64.h"
-#include "../uri_codec.h"
-#include "../api_ocr.h"
+#include "../blood_ocr.h"
 
 #include "json/json.h"
 #include "../err.h"
@@ -59,12 +58,14 @@ namespace http {
 			
 
 			/* 分发请求，返回数据 */ 
-			Api_OCR& ocr = Api_OCR::Instance();//
+			Blood_OCR& bloodocr = Blood_OCR::Instance();//
 			int ret = 0;
 			if (request_path == "/ocr/blood")
 			{
-				std::vector<uchar> iamge_buffer = base64_decode(UriDecode(req.data));  // url_decode -> base64_decode
-				ret = ocr.recognise(iamge_buffer); /* 调用ocr api */
+				std::string data;
+				url_decode(req.data, data);  // url_decode
+				std::vector<uchar> iamge_buffer = base64_decode(data);  //base64_decode
+				ret = bloodocr.recognise(iamge_buffer); /* 调用ocr api */
 			}
 			else
 			{
@@ -74,7 +75,7 @@ namespace http {
 			Json::Value result_root;
 			if (ret == H6OCRERROR::SUCCESS)
 			{
-				ocr.retrieve(result_root);
+				bloodocr.retrieve(result_root);
 			}
 
 			{

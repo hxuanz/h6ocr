@@ -42,8 +42,8 @@ namespace http {
 							request_.is_in_headers = false;
 							/* 将header 转为 request_内的对象*/
 							std::string header_str = request_.data + data.substr(0, found);
-							std::cout << std::endl << "------- header------" << std::endl;
-							std::cout << std::endl << header_str << std::endl;   //v
+							//std::cout << std::endl << "------- header------" << std::endl;
+							//std::cout << std::endl << header_str << std::endl;   //v
 							request_parser_.parse(request_, header_str.c_str(), header_str.c_str() + header_str.size());
 							for (header h : request_.headers)
 							{
@@ -64,9 +64,12 @@ namespace http {
 						request_.data += std::string(buffer_.data(), bytes_transferred);
 						if (request_.data.size() == request_.body_len)
 						{
+							request_.data = request_.data.substr(5); // data=
+							//std::cout << std::endl << "------- data------" << std::endl;
+							//std::cout << request_.data.substr(0,100) << std::endl;
 							request_handler_.handle_request(request_, reply_);  // 处理请求
-							std::cout << std::endl << "------- result------" << std::endl;
-							std::cout << reply_.content << std::endl;
+							//std::cout << std::endl << "------- result------" << std::endl;
+							//std::cout << reply_.content << std::endl;
 							do_write();
 							/*  重新初始化*/
 							request_.params.clear();

@@ -9,13 +9,8 @@ using namespace std;
 //#define DEBUG_MODE
 
 #ifdef DEBUG_MODE
-#include "master.h"
 int main(int argc, char* argv[])
 {
-	std::unordered_map<std::string, std::string> params;
-	{
-		params["dict"] = "{\"r_GT\":\"\",\"A/G\":\"\",\"ALB\":\"\",\"ALP\":\"\",\"ALT\":\"\",\"ASL\":\"\",\"CHO\":\"\",\"Crea\":\"\",\"DBILI\":\"\",\"GLB\":\"\",\"GLU\":\"\",\"HBsAg\":\"\",\"TBILI\":\"\",\"TG\":\"\",\"TP\":\"\",\"UA\":\"\",\"UREA\":\"\"}";
-	}
 	string data;
 	{
 		string path = "D://ocr//1.jpg";

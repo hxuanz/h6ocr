@@ -168,6 +168,7 @@
     <ClInclude Include="server\server.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="uri_codec.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="err.h" />
   </ItemGroup>
@@ -187,6 +188,7 @@
     <ClCompile Include="server\request_parser.cpp" />
     <ClCompile Include="server\server.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="uri_codec.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

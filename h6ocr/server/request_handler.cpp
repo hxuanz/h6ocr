@@ -9,6 +9,7 @@
 
 #include <unordered_map>
 #include "../base64.h"
+#include "../uri_codec.h"
 #include "../api_ocr.h"
 
 #include "json/json.h"
@@ -60,10 +61,10 @@ namespace http {
 			/* 分发请求，返回数据 */ 
 			Api_OCR& ocr = Api_OCR::Instance();//
 			int ret = 0;
-			if (request_path == "/ocr")
+			if (request_path == "/ocr/blood")
 			{
-				std::vector<uchar> iamge_buffer = base64_decode(req.data);
-				ret = ocr.recognise(iamge_buffer, req.params.at("dict")); /* 调用ocr api */
+				std::vector<uchar> iamge_buffer = base64_decode(UriDecode(req.data));  // url_decode -> base64_decode
+				ret = ocr.recognise(iamge_buffer); /* 调用ocr api */
 			}
 			else
 			{

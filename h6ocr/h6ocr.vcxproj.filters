@@ -75,6 +75,9 @@
     <ClInclude Include="err.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="uri_codec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -123,6 +126,9 @@
       <Filter>源文件\jsoncpp</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="uri_codec.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

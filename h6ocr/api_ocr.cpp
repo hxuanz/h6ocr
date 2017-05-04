@@ -15,6 +15,12 @@ Api_OCR::~Api_OCR()
 
 void Api_OCR::init()
 {
+	string dict = "{\"r_GT\":\"\",\"A/G\":\"\",\"ALB\":\"\",\"ALP\":\"\",\"ALT\":\"\",\"ASL\":\"\",\"CHO\":\"\",\"Crea\":\"\",\"DBILI\":\"\",\"GLB\":\"\",\"GLU\":\"\",\"HBsAg\":\"\",\"TBILI\":\"\",\"TG\":\"\",\"TP\":\"\",\"UA\":\"\",\"UREA\":\"\"}";
+	Json::Reader reader;
+	if (!reader.parse(dict, result_))
+	{
+		cerr << "init fail!" << endl;
+	}
 	{
 		tess_ocr_key_.Init(NULL, "fontyp", tesseract::OEM_TESSERACT_ONLY);
 		tess_ocr_key_.SetPageSegMode(tesseract::PSM_SINGLE_LINE);
@@ -23,6 +29,7 @@ void Api_OCR::init()
 		tess_ocr_value_.Init(NULL, "num", tesseract::OEM_TESSERACT_ONLY);
 		tess_ocr_value_.SetPageSegMode(tesseract::PSM_SINGLE_LINE);
 	}
+	cout << "init ocr api success!" << endl;
 }
 
 /* 找到横线 →  定位四个角 → 透视变换 */
@@ -245,14 +252,9 @@ int Api_OCR::cutAndOcr(const Mat& image)
 }
 
 
-int Api_OCR::recognise(const vector<unsigned char>& image_buffer, string result)
+int Api_OCR::recognise(const vector<unsigned char>& image_buffer)
 {
 	/* 处理输入参数*/
-	Json::Reader reader;
-	if (!reader.parse(result, result_))
-	{
-		return INVILD_DICTIONARY;
-	}
 	Mat src_image = imdecode(Mat(image_buffer), 0);
 	if (src_image.data == NULL)
 	{

@@ -9,7 +9,7 @@ public:
 		static Api_OCR singleton;
 		return singleton;
 	}
-	int recognise(const std::vector<unsigned char>& image_buffer, std::string result);
+	int recognise(const std::vector<unsigned char>& image_buffer);
 	void Api_OCR::retrieve(Json::Value& result);
 
 protected:	

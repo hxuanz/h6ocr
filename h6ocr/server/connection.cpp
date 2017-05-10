@@ -1,8 +1,11 @@
+// 处理单个连接
 #include "connection.hpp"
 #include <utility>
 #include <vector>
+#include <unordered_map>
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
+
 
 namespace http {
 	namespace server {
@@ -25,59 +28,57 @@ namespace http {
 			socket_.close();
 		}
 
+		/* 接受的是http post 请求，
+		数据分为两部分：header 和 data。 两部分用 \t\n\t\n 隔开
+		*/
 		void connection::do_read()
 		{
 			auto self(shared_from_this());
-			socket_.async_read_some(boost::asio::buffer(buffer_),
+			socket_.async_read_some(boost::asio::buffer(buffer_),  
 				[this, self](boost::system::error_code ec, std::size_t bytes_transferred)  //Lambda
 			{
-				if (!ec)  // error code
+				if (!ec) 
 				{
-					if (request_.is_in_headers)  // 数据还处于header范围
+					if (request_.is_in_headers) 
 					{
 						std::string data(buffer_.data(), buffer_.data() + bytes_transferred);
 						int found = data.find("\r\n\r\n");
-						if (found != std::string::npos)  //找到\t\n\t\n， header接收完成
+						if (found != std::string::npos)  //出现 \t\n\t\n  -> header接收完成
 						{
 							request_.is_in_headers = false;
-							/* 将header 转为 request_内的对象*/
+
 							std::string header_str = request_.data + data.substr(0, found);
-							//std::cout << std::endl << "------- header------" << std::endl;
-							//std::cout << std::endl << header_str << std::endl;   //v
 							request_parser_.parse(request_, header_str.c_str(), header_str.c_str() + header_str.size());
 							for (header h : request_.headers)
 							{
-
-								request_.params[h.name] = h.value;
+								if (h.name == "Content-Length")
+								{
+									request_.body_len = stoi(h.value);
+									break;
+								}
 							}
-							request_.body_len = stoi(request_.params["Content-Length"]);
-							request_.data = data.substr(found + 4);
-							
+							request_.data = data.substr(found + 4);  // 跳过4个字节 \r\n\r\n
 						}
-						else  // header没接收完， 用request_.data暂存
+						else  // header没接收完，用request_.data暂存
 						{
-							request_.data += data;
+							request_.data += data; 
 						}
-					}  // 数据还处于data范围
-					else
+					}  
+					else  
 					{
 						request_.data += std::string(buffer_.data(), bytes_transferred);
-						if (request_.data.size() == request_.body_len)
+						if (request_.data.size() == request_.body_len)  //data接受完毕
 						{
-							request_.data = request_.data.substr(5); // data=
-							//std::cout << std::endl << "------- data------" << std::endl;
-							//std::cout << request_.data.substr(0,100) << std::endl;
-							request_handler_.handle_request(request_, reply_);  // 处理请求
-							//std::cout << std::endl << "------- result------" << std::endl;
-							//std::cout << reply_.content << std::endl;
+							request_handler_.handle_request(request_, reply_);  // 处理请求， 结果写入reply_对象中
+							/* 发送给客户端 */
 							do_write();
+
 							/*  重新初始化*/
-							request_.params.clear();
-							request_.data = ""; //
+							request_.data = ""; 
 							request_.is_in_headers = true;
 						}
 					}
-					do_read();
+					do_read(); // 再次读取
 				}
 				else if (ec != boost::asio::error::operation_aborted)
 				{

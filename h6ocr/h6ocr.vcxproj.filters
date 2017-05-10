@@ -16,9 +16,6 @@
     <Filter Include="源文件\server">
       <UniqueIdentifier>{734f0303-86a6-46b1-89f0-6df64bc10bdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\jsoncpp">
-      <UniqueIdentifier>{6f94e15b-ae48-436a-aa3d-a6d0a517d996}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\server">
       <UniqueIdentifier>{b692ecd8-f50b-47f0-80aa-a320c6e60ad9}</UniqueIdentifier>
     </Filter>
@@ -113,15 +110,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_reader.cpp">
-      <Filter>源文件\jsoncpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_value.cpp">
-      <Filter>源文件\jsoncpp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\jsoncpp\src\lib_json\json_writer.cpp">
-      <Filter>源文件\jsoncpp</Filter>
-    </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -131,10 +119,5 @@
     <ClCompile Include="blood_ocr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="blood.dict">
-      <Filter>源文件</Filter>
-    </None>
   </ItemGroup>
 </Project>

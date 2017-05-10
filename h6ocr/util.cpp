@@ -55,6 +55,23 @@ void findHorizontaLinesNearTarget(vector<Vec2f>& lines, float target)
 	lines.assign(target_it - 1, target_it + 1);
 }
 
+void findHorizontaLines_MaxInterval(vector<Vec2f>& lines)
+{
+	//lines 已经是排好序的
+	float max_interval = 0;
+	int ans = 0;
+	for (int i = 1; i < lines.size(); ++i)
+	{
+		float interval = lines[i][0] - lines[i - 1][0];
+		if (interval > max_interval)
+		{
+			max_interval = interval;
+			ans = i;
+		}
+	}
+	lines = { lines[ans-1], lines[ans] };
+}
+
 
 void drawLines(Mat &image, vector<Vec2f> &lines)
 {
@@ -274,9 +291,9 @@ int detectLines(const Mat& src_image, vector<Vec2f>& lines)
 		{
 			threshold += step;
 		}
-		else if (len < 3)
+		else if (len < 2)  // 目标个数过少，减小阈值
 		{
-			threshold -= step;  // 目标个数过少，减小阈值
+			threshold -= step;  
 			continue;
 		}
 		else  /* 3~10 */

@@ -6,15 +6,12 @@ using namespace cv;
 
 Blood_OCR::Blood_OCR()
 {
-	loadDictionary();
 	initOcrEngine();
-	//buildBKTree();
 	cout << "init ocr api success!" << endl;
 }
 
 Blood_OCR::~Blood_OCR()
 {
-	//destoryBKTree(bk_tree_);
 }
 
 int Blood_OCR::initOcrEngine()
@@ -26,113 +23,37 @@ int Blood_OCR::initOcrEngine()
 	return 0;
 }
 
-// 读取配置文件给 result_ key赋值
+/*
 
-
-int Blood_OCR::loadDictionary()
 {
-	ifstream ifs("blood.dict", std::ifstream::in);
-	string line;
-	while (!ifs.eof()){
-		std::getline(ifs, line);
-		result_[line] = ""; // 
+"scale":[
+{
+"id": "s1-q1-o1", (平台内部使用该属性)
+"text": "CBILB", (图像识别接口使用该属性)
+"value": "" （图像识别结束后，将识别后数据赋给该属性）
+},
+{
+}
+]
+}
+
+*/
+int Blood_OCR::loadDictionary(string dictionary_string)
+{
+	Json::Reader reaeder;
+	if (!reaeder.parse(dictionary_string, result_))
+	{
+		return -1;
 	}
-	ifs.close();
+
+	Json::Value scale = result_["scale"];
+	for (Json::Value obj : scale)
+	{
+		dictionary_.insert(pair<string,string>(obj["text"].asString(), ""));
+	}
 	return 0;
 }
 
-///* 建立BK树 */
-//void Blood_OCR::buildBKTree()
-//{
-//	
-//	vector<string> words = result_.getMemberNames();
-//	
-//	for (string word : words)
-//	{
-//		if (bk_tree_ == NULL)  // 第一个单词作为根
-//		{
-//			bk_tree_ = new BK_TREE(word);
-//			continue;
-//		}
-//		/* 构造*/
-//		BK_TREE* node = bk_tree_;
-//		while (true)
-//		{
-//			int dis = COMMON::minEditDistance(word, node->word);
-//			if (node->childs.count(dis) == 0)  //这个距离值是该节点处头一次出现，建立一个新的儿子节点
-//			{
-//				BK_TREE* tmp = new BK_TREE(word);
-//				node->childs[dis] = tmp;
-//				break;
-//			}
-//			else  //递归
-//			{
-//				node = node->childs[dis];
-//			}
-//		}
-//	}
-//}
-//
-///* 递归释放BK树 */
-//void Blood_OCR::destoryBKTree(BK_TREE* tree)
-//{
-//	if (tree == NULL) return;
-//	bk_childs& childs = tree->childs;
-//	delete tree;
-//	for (auto x : childs)
-//	{
-//		BK_TREE* node = x.second;
-//		destoryBKTree(node);
-//	}
-//}
-///* 计算单词与根节点的编辑距离d，
-//然后递归查找每个子节点标号为d-n到d+n（包含）的边。
-//假如被检查的节点与搜索单词的距离d小于n，则返回该节点并继续查询。*/
-//void Blood_OCR::searchInBkTree(BK_TREE* tree, int threshold, string& word)
-//{
-//	if (tree == NULL){
-//		return;
-//	}
-//	int dis = COMMON::minEditDistance(tree->word, word);
-//	if (dis <= threshold)
-//	{
-//		word = tree->word;
-//		return;
-//	}
-//	//递归查找每个子节点标号为d - n到d + n（包含）的边
-//	int lo = dis - threshold;
-//	int hi = dis + threshold;
-//	for (int i = lo; i <= hi; ++i)
-//	{
-//		if (tree->childs.count(i) == 1)
-//			searchInBkTree(tree->childs.at(i), threshold, word);
-//	}
-//}
-//
-
-// 与字典尝试匹配，返回匹配成功的数量
-//int Blood_OCR::correctKey(vector<string> &keys)
-//{
-//	vector<string> &names = result_.getMemberNames();
-//	int valid_count = 0;
-//	for (string& key : keys)
-//	{
-//		if (result_.isMember(key))  //直接找到
-//		{
-//			++valid_count;
-//			continue;
-//		}
-//		/* 根据编辑距离最小原则，纠正*/
-//		int threshold = 2;
-//		string tmp = key;
-//		searchInBkTree(bk_tree_, threshold, key);
-//		if (tmp != key)
-//		{
-//			++valid_count;
-//		}
-//	}
-//	return valid_count;
-//}
 
 /* 找到横线 →  定位四个角 → 透视变换 */
 int Blood_OCR::perspectiveTransformation(const Mat& src_image, Mat& dst_image)
@@ -152,7 +73,7 @@ int Blood_OCR::perspectiveTransformation(const Mat& src_image, Mat& dst_image)
 		//	imshow("横线识别结果", tmp_image);
 		//}
 		/* 找到需要的直线*/
-		findHorizontaLinesNearTarget(lines, src_image_size.height / 2);  // 中间位置，上下扩散 
+		findHorizontaLines_MaxInterval(lines);  //这里假定：间距最大的两条直线之间的内容就是待识别区域
 	}
 
 	{	/* 透射变换 */
@@ -200,16 +121,13 @@ int Blood_OCR::findLeftAndRightEdge(const Mat& src_image, Mat& dst_image)
 	return 0;
 }
 
-
-
 // 与字典尝试匹配，返回匹配成功的数量
 int Blood_OCR::correctKey(vector<string> &keys)
 {
-	vector<string> &names = result_.getMemberNames();
 	int valid_count = 0;
 	for (string& key : keys)
 	{
-		if (result_.isMember(key))  //直接找到
+		if (dictionary_.count(key) == 1)  //直接找到
 		{
 			++valid_count;
 			continue;
@@ -217,13 +135,14 @@ int Blood_OCR::correctKey(vector<string> &keys)
 		/* 根据编辑距离最小原则，纠正*/
 		int minDis = 100;
 		string target;
-		for (vector<string>::iterator it = names.begin(); it != names.end(); ++it)
+		for (auto name_pair : dictionary_)
 		{
-			int dis = COMMON::minEditDistance(*it, key);
+			string name = name_pair.first;
+			int dis = COMMON::minEditDistance(name, key);
 			if (dis < minDis)
 			{
 				minDis = dis;
-				target = *it;  //
+				target = name;  //
 			}
 		}
 		if (minDis <= key.size() / 2)
@@ -234,6 +153,7 @@ int Blood_OCR::correctKey(vector<string> &keys)
 	}
 	return valid_count;
 }
+
 /* 根据是否是float判断*/
 int Blood_OCR::correctValue(vector<string> &values)
 {
@@ -256,21 +176,21 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 	Mat canny_image;
 	Canny(image, canny_image, 50, 200, 3);  /* 边缘检测 -> 变成黑白图像[利于计算] */
 
-	/* 竖向切割  --> 得到大区域 */
+	/* 竖向切割*/
 	vector<Rect> rects;
 	{
 		Rect image_rect = { 0, 0, image_size.width, image_size.height };
 		cut_Vertical(canny_image, image_rect, rects);
-
+		if (rects.empty())
+		{
+			return H6OCRERROR::cutAndOcr_cut_Vertical;
+		}
 		//Mat tmp;
 		//cv::cvtColor(image, tmp, CV_GRAY2BGR);
 		//drawRectangles(tmp, rects);
 		//imshow("竖向切割区域识别", tmp);
 	}
-	if (rects.empty())
-	{
-		return H6OCRERROR::cutAndOcr_cut_Vertical;
-	}
+
 		
 	vector<string> keys, values;
 
@@ -346,18 +266,25 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 	for (int i = 0; i < keys.size(); ++i)
 	{
 		string key = keys[i];
-		if (result_.isMember(key))
+		if (dictionary_.count(key) == 1)
 		{
-			result_[key] = values[i];
+			dictionary_[key] = values[i];
 		}
 	}
 	return 0;
 }
 
 
+/*
+识别对象要求： 至少有两条横线； 然后按列分隔，key和value的列一一对应
+基本识别思路：
+	识别横线，取横线间距最大的两条作为识别区域
+	根据两条横线的四个角，投射变换得到规整的矩形区域；
+	按列切割；
+	针对每一列，尝试识别；如果识别率达到一定阈值确定其实key或者value。
+*/
 int Blood_OCR::recognise(const vector<unsigned char>& image_buffer)
 {
-	/* 处理输入参数*/
 	Mat src_image = imdecode(Mat(image_buffer), 0);
 	if (src_image.data == NULL)
 	{
@@ -365,7 +292,7 @@ int Blood_OCR::recognise(const vector<unsigned char>& image_buffer)
 	}
 	//imshow("【原图】", src_image);
 
-	/**************** 开始 ****************/
+	/***********************************/
 	int ret;
 	Mat transform_image;
 	ret = perspectiveTransformation(src_image, transform_image);
@@ -375,16 +302,25 @@ int Blood_OCR::recognise(const vector<unsigned char>& image_buffer)
 	Mat dst_image;
 	ret = findLeftAndRightEdge(transform_image, dst_image);
 	if (ret != 0) return ret;
-	//imshow("【左右边界定位结果】", dst_image);
+	//imshow("【定位左右边界结果】", dst_image);
 
 	ret = cutAndOcr(dst_image);
 	if (ret != 0) return ret;
 
-	/**************** *** ****************/
+	/***********************************/
 	return 0;
 }
 
 void Blood_OCR::retrieve(Json::Value& result)
 {
-	result["data"] = result_;
+	Json::Value& scale = result_["scale"];
+	for (auto& obj : scale)
+	{
+		string text = obj["text"].asString();
+		if (dictionary_.count(text) == 1)
+		{
+			obj["value"] = dictionary_[text];
+		}
+	}
+	result["scaleData"] = result_;
 }

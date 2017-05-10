@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include "header.hpp"
-#include <unordered_map>
 
 namespace http {
 	namespace server {
@@ -18,9 +17,8 @@ namespace http {
 			int http_version_major;
 			int http_version_minor;
 			std::vector<header> headers;
-			std::unordered_map<std::string, std::string> params;
 			std::string data;
-			int body_len;
+			int body_len;  //
 			bool is_in_headers;
 		};
 

@@ -8,7 +8,6 @@ namespace COMMON
 	{
 		vector<float> new_idxs;
 		new_idxs.push_back(idxs.front());  // 首尾数字保留
-		int idx = 1;
 		int begin = 0, end;
 		for (size_t i = 1; i < idxs.size(); i++)
 		{
@@ -27,10 +26,12 @@ namespace COMMON
 		new_idxs.push_back(idxs.back());
 		idxs = new_idxs;
 	}
+
 	bool floatEqual(float d1, float d2, float accuracy)
 	{
 		return abs(d1 - d2) < accuracy;
 	}
+	/* 是否是同一个字母， 不区分大小写*/
 	bool isCharEqual(unsigned char a, unsigned char b)
 	{
 		if (isalpha(a) && isalpha(b))
@@ -41,7 +42,7 @@ namespace COMMON
 	}
 
 	/*  TODO: 代价可以考虑重新定义
-	这里替换代价应该最小 如果是C和G之间的替换，则更小*/
+	如果是C和G之间的替换，则更小*/
 	int minEditDistance(string word1, string word2) {
 		int m = word1.length(), n = word2.length();
 		vector<int> dp(m + 1, 0);
@@ -68,6 +69,7 @@ namespace COMMON
 		return dp.back();
 	}
 
+	/* 去除空格 */
 	string stripAllSpace(string str)
 	{
 		vector<char> tmp;
@@ -78,14 +80,11 @@ namespace COMMON
 		}
 		return string(tmp.begin(), tmp.end());
 	}
-
-
-
+	
 	bool isFloat(string myString) {
 		std::istringstream iss(myString);
 		float f;
 		iss >> noskipws >> f; // noskipws considers leading whitespace invalid
-							  // Check the entire string was consumed and if either failbit or badbit is set
-		return iss.eof() && !iss.fail();
+		return iss.eof() && !iss.fail();// Check the entire string was consumed and if either failbit or badbit is set
 	}
 }

@@ -17,7 +17,7 @@ void findLines_Vertical(vector<Vec2f>& lines);
 
 /* 横线中找到纵坐标跟值target最接近的两条直线*/
 void findHorizontaLinesNearTarget(vector<Vec2f>& lines, float target);
-
+void findHorizontaLines_MaxInterval(vector<Vec2f>& lines);
 
 void drawLines(Mat &image, vector<Vec2f> &lines);
 void drawRectangles(Mat &image, vector<Rect>& rects);

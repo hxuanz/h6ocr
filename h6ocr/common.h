@@ -8,5 +8,4 @@ namespace COMMON
 	bool floatEqual(float d1, float d2, float accuracy = 0.000001);
 	string stripAllSpace(string str);
 	bool isFloat(string myString);
-
 }

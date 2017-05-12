@@ -19,6 +19,18 @@
     <Filter Include="头文件\server">
       <UniqueIdentifier>{b692ecd8-f50b-47f0-80aa-a320c6e60ad9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\api">
+      <UniqueIdentifier>{d2d82234-e500-4bdd-9812-0cceb57e9148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\api">
+      <UniqueIdentifier>{c94a4133-0e78-456c-bcbd-95da58da6f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\util">
+      <UniqueIdentifier>{8d5dd199-17de-4901-bd15-f1ae2eab9d92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\util">
+      <UniqueIdentifier>{7a0ad8b3-91ec-478f-8e44-743ad0d7e93b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -57,23 +69,29 @@
     <ClInclude Include="server\server.hpp">
       <Filter>头文件\server</Filter>
     </ClInclude>
-    <ClInclude Include="base64.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="err.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="uri_codec.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="blood_ocr.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\api</Filter>
+    </ClInclude>
+    <ClInclude Include="asr.h">
+      <Filter>头文件\api</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
+    <ClInclude Include="base64.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
+    <ClInclude Include="my_log.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
+    <ClInclude Include="uri_codec.h">
+      <Filter>头文件\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -101,23 +119,29 @@
     <ClCompile Include="server\server.cpp">
       <Filter>源文件\server</Filter>
     </ClCompile>
-    <ClCompile Include="base64.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="common.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="util.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="blood_ocr.cpp">
+      <Filter>源文件\api</Filter>
+    </ClCompile>
+    <ClCompile Include="asr.cpp">
+      <Filter>源文件\api</Filter>
+    </ClCompile>
+    <ClCompile Include="base64.cpp">
+      <Filter>源文件\util</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>源文件\util</Filter>
+    </ClCompile>
+    <ClCompile Include="my_log.cpp">
+      <Filter>源文件\util</Filter>
     </ClCompile>
     <ClCompile Include="uri_codec.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\util</Filter>
     </ClCompile>
-    <ClCompile Include="blood_ocr.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="util.cpp">
+      <Filter>源文件\util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

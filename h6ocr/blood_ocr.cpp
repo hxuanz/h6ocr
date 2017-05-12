@@ -1,13 +1,14 @@
 #include "blood_ocr.h"
 #include <time.h> 
 #include "err.h"
+#include "my_log.h"
+
 using namespace std;
 using namespace cv;
 
 Blood_OCR::Blood_OCR()
 {
 	initOcrEngine();
-	cout << "init ocr api success!" << endl;
 }
 
 Blood_OCR::~Blood_OCR()
@@ -16,6 +17,7 @@ Blood_OCR::~Blood_OCR()
 
 int Blood_OCR::initOcrEngine()
 {
+	_INFO("初始化ocr引擎");
 	tess_ocr_key_.Init(NULL, "fontyp", tesseract::OEM_TESSERACT_ONLY);
 	tess_ocr_key_.SetPageSegMode(tesseract::PSM_SINGLE_LINE);
 	tess_ocr_value_.Init(NULL, "num", tesseract::OEM_TESSERACT_ONLY);
@@ -23,23 +25,10 @@ int Blood_OCR::initOcrEngine()
 	return 0;
 }
 
-/*
 
-{
-"scale":[
-{
-"id": "s1-q1-o1", (平台内部使用该属性)
-"text": "CBILB", (图像识别接口使用该属性)
-"value": "" （图像识别结束后，将识别后数据赋给该属性）
-},
-{
-}
-]
-}
-
-*/
 int Blood_OCR::loadDictionary(string dictionary_string)
 {
+	_INFO("加载血生化字典");
 	Json::Reader reaeder;
 	if (!reaeder.parse(dictionary_string, result_))
 	{
@@ -76,7 +65,7 @@ int Blood_OCR::perspectiveTransformation(const Mat& src_image, Mat& dst_image)
 		findHorizontaLines_MaxInterval(lines);  //这里假定：间距最大的两条直线之间的内容就是待识别区域
 	}
 
-	{	/* 透射变换 */
+	{	/* 定位四个角 */
 		vector<Point2f> corners = {
 			getLeftEndpointOfLine(lines.front()),
 			getRightEndpointOfLine(lines.front(), src_image_size.width),
@@ -90,9 +79,8 @@ int Blood_OCR::perspectiveTransformation(const Mat& src_image, Mat& dst_image)
 			{ 0, 0 }, { dst_size.width, 0 }, { 0, dst_size.height }, { dst_size.width, dst_size.height }
 		};
 		Mat warp_mat = cv::getPerspectiveTransform(corners, corners_trans);
-		warpPerspective(src_image, dst_image, warp_mat, dst_size);
+		cv::warpPerspective(src_image, dst_image, warp_mat, dst_size);  // 透视变换
 	}
-
 	return 0;
 }
 
@@ -148,7 +136,7 @@ int Blood_OCR::correctKey(vector<string> &keys)
 		if (minDis <= key.size() / 2)
 		{
 			++valid_count;
-			key = target;
+			key = target;  //correct
 		}
 	}
 	return valid_count;
@@ -176,6 +164,7 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 	Mat canny_image;
 	Canny(image, canny_image, 50, 200, 3);  /* 边缘检测 -> 变成黑白图像[利于计算] */
 
+	_INFO("竖向切割...");
 	/* 竖向切割*/
 	vector<Rect> rects;
 	{
@@ -197,10 +186,10 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 	tess_ocr_key_.SetImage(image.data, image.cols, image.rows, 1, image.step);
 	tess_ocr_value_.SetImage(image.data, image.cols, image.rows, 1, image.step);
 
-	int key_count_flag = 0; // key的列数
+	int key_count_flag = 0; // 还没找到对应value列的key的列数
 	int tmp_idx = 0;
 	vector<string> tmp_keys;
-
+	_INFO("横向切割...");
 	for (Rect rect : rects)
 	{
 		++tmp_idx;
@@ -217,22 +206,25 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 		//	drawRectangles(tmp_image, areas);
 		//	//imshow("识别区域" + std::to_string(tmp_idx), tmp_image);
 		//}
+
+
 		/*
 		尝试ocr --> 判断是否是需要的数据
 		key 在 value 的左边, 并且一一对应。有多少key列就有多少value列
 		*/
-
 		vector<string> result;
 		int valid_count = 0;
-		batchOCR(tess_ocr_key_, image, areas, result);
-		valid_count = correctKey(result);
-		if (valid_count > result.size() / 3)  // 匹配度超过一半 -> 可认为是key
+		if (key_count_flag == 0)
 		{
-			tmp_keys.assign(result.begin(), result.end());
-			++key_count_flag;
-			continue;
+			batchOCR(tess_ocr_key_, image, areas, result);
+			valid_count = correctKey(result);
+			if (valid_count > result.size() / 3)  // 匹配度超过1/3 -> 可认为是key
+			{
+				++key_count_flag;
+				tmp_keys.assign(result.begin(), result.end());
+			}
 		}
-		if (key_count_flag > 0)
+		else
 		{
 			batchOCR(tess_ocr_value_, image, areas, result);
 			valid_count = correctValue(result);
@@ -276,7 +268,7 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 
 
 /*
-识别对象要求： 至少有两条横线； 然后按列分隔，key和value的列一一对应
+可识别对象要求： 至少有两条横线； 然后按列分隔，key和value的列一一对应
 基本识别思路：
 	识别横线，取横线间距最大的两条作为识别区域
 	根据两条横线的四个角，投射变换得到规整的矩形区域；
@@ -285,6 +277,7 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 */
 int Blood_OCR::recognise(const vector<unsigned char>& image_buffer)
 {
+	_INFO("recognise...");
 	Mat src_image = imdecode(Mat(image_buffer), 0);
 	if (src_image.data == NULL)
 	{
@@ -292,27 +285,28 @@ int Blood_OCR::recognise(const vector<unsigned char>& image_buffer)
 	}
 	//imshow("【原图】", src_image);
 
-	/***********************************/
+	_INFO("透射变换...");
 	int ret;
 	Mat transform_image;
 	ret = perspectiveTransformation(src_image, transform_image);
 	if (ret != 0) return ret;
 	//imshow("【透射变换结果】", transform_image);
 
+	_INFO("定位左右边界...");
 	Mat dst_image;
 	ret = findLeftAndRightEdge(transform_image, dst_image);
 	if (ret != 0) return ret;
 	//imshow("【定位左右边界结果】", dst_image);
 
+	_INFO("切割和识别r...");
 	ret = cutAndOcr(dst_image);
-	if (ret != 0) return ret;
 
-	/***********************************/
-	return 0;
+	return ret;
 }
 
 void Blood_OCR::retrieve(Json::Value& result)
 {
+	_INFO("取结果...");
 	Json::Value& scale = result_["scale"];
 	for (auto& obj : scale)
 	{

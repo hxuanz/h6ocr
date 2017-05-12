@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "server\server.hpp"
-
+#include "my_log.h"
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -15,13 +15,15 @@ int main(int argc, char* argv[])
 			port = argv[1];
 		}
 
+		MyLog::init("d:/logs");
+
 		http::server::server s("0.0.0.0", port, "");  // 初始化
-		cout << "Run the server...." << endl << "port: " << port << endl;
+		_INFO("启动服务  port: " + port);
 		s.run();
 	}
 	catch (std::exception& e)
 	{
-		std::cerr << "exception: " << e.what() << "\n";
+		_ERROR("exception: " + string(e.what()));
 	}
 
 	return 0;

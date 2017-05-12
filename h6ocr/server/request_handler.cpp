@@ -13,7 +13,7 @@
 
 #include "json/json.h"
 #include "../err.h"
-
+#include "../my_log.h"
 #include <boost/algorithm/string.hpp>
 
 /* 解析post的data字段，键值对。  eg：  ....=...&...=...&......=... */
@@ -76,12 +76,17 @@ namespace http {
 			int ret = 0;
 			if (request_path == "/ocr/xhd")
 			{
+				_INFO("解析数据段");
 				/* 解析数据段*/
 				std::string data;
 				url_decode(req.data, data);  
-
 				std::unordered_map<std::string, std::string> params; /* 解析 post 请求的数据段*/
 				parse_params(data, params);
+				if (params.count("imageData") == 0 || params.count("scaleData") == 0)
+				{
+					ret = H6OCRERROR::INVILD_PARAMS;
+					goto BREAK;
+				}
 
 				std::vector<uchar> iamge_buffer = base64_decode(params.at("imageData"));  //base64_decode
 
@@ -101,14 +106,15 @@ namespace http {
 			}
 
 		BREAK:
-			
-			result_root["error_no"] = ret;
-			if (ret == H6OCRERROR::SUCCESS)
+			if (ret != SUCCESS)
 			{
-				Json::FastWriter writer;
-				rep.content = writer.write(result_root);
-				cout << rep.content << endl;
+				_ERROR("本次OCR失败");
+				_ERROR("错误代码: " + to_string(ret));
 			}
+			result_root["error_no"] = ret;
+			Json::FastWriter writer;
+			rep.content = writer.write(result_root);
+		
 			rep.status = reply::ok;
 			rep.headers.resize(2);
 			rep.headers[0] = { "Content-Length", std::to_string(rep.content.size()) };

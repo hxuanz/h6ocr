@@ -4,6 +4,7 @@ enum H6OCRERROR
 { 
 	SUCCESS = 0,
 	INVILD_URI = 10,
+	INVILD_PARAMS,
 	INVILD_IMAGE,
 	INVILD_DICTIONARY,
 	perspective_detectLines = 20, 

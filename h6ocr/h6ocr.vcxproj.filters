@@ -93,6 +93,9 @@
     <ClInclude Include="uri_codec.h">
       <Filter>头文件\util</Filter>
     </ClInclude>
+    <ClInclude Include="arg_parser.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -141,6 +144,9 @@
       <Filter>源文件\util</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp">
+      <Filter>源文件\util</Filter>
+    </ClCompile>
+    <ClCompile Include="arg_parser.cpp">
       <Filter>源文件\util</Filter>
     </ClCompile>
   </ItemGroup>

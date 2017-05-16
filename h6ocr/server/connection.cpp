@@ -69,8 +69,6 @@ namespace http {
 						request_.data += std::string(buffer_.data(), bytes_transferred);
 						if (request_.data.size() == request_.body_len)  //data接受完毕
 						{
-							std::cout << "new connect!" << std::endl;
-							_INFO(request_.data.substr(0, 100));
 							request_handler_.handle_request(request_, reply_);  // 处理请求， 结果写入reply_对象中
 							/* 发送给客户端 */
 							_INFO(reply_.content);

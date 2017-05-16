@@ -155,6 +155,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="arg_parser.h" />
     <ClInclude Include="asr.h" />
     <ClInclude Include="blood_ocr.h" />
     <ClInclude Include="base64.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="err.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="arg_parser.cpp" />
     <ClCompile Include="asr.cpp" />
     <ClCompile Include="blood_ocr.cpp" />
     <ClCompile Include="base64.cpp" />

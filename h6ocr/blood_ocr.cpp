@@ -32,7 +32,8 @@ int Blood_OCR::loadDictionary(string dictionary_string)
 	Json::Reader reaeder;
 	if (!reaeder.parse(dictionary_string, result_))
 	{
-		return -1;
+		_ERROR(dictionary_string);
+		return H6OCRERROR::ERR_loadDictionary_Json_parse;
 	}
 
 	Json::Value scale = result_["scale"];
@@ -54,6 +55,7 @@ int Blood_OCR::perspectiveTransformation(const Mat& src_image, Mat& dst_image)
 	{
 		if (detectLines(src_image, lines) != 0)
 		{
+			_ERROR("直线数量" + to_string(lines.size()));
 			return H6OCRERROR::perspective_detectLines;
 		}
 		//{
@@ -172,6 +174,7 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 		cut_Vertical(canny_image, image_rect, rects);
 		if (rects.empty())
 		{
+			_ERROR("竖向切割的结果为空" );
 			return H6OCRERROR::cutAndOcr_cut_Vertical;
 		}
 		//Mat tmp;
@@ -240,18 +243,22 @@ int Blood_OCR::cutAndOcr(const Mat& image)
 	}
 	if (keys.empty())
 	{
+		_ERROR("keys 结果为空"); 
 		return H6OCRERROR::cutAndOcr_keys_null;
 	}
 	if (values.empty())
 	{
+		_ERROR("values 结果为空");
 		return H6OCRERROR::cutAndOcr_values_null;
 	}
 	if ( keys.size() > values.size())
 	{
+		_ERROR("keys 比 values 结果数目更多");
 		return H6OCRERROR::cutAndOcr_keys_greater;;
 	}
 	if (keys.size() < values.size())
 	{
+		_ERROR("values 比 keys 结果数目更多");
 		return H6OCRERROR::cutAndOcr_values_greater;;
 	}
 

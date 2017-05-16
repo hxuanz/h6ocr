@@ -32,6 +32,8 @@ namespace http {
 			/// Stop all asynchronous operations associated with the connection.
 			void stop();
 
+			std::string get_address() const { return socket_.remote_endpoint().address().to_string(); }
+
 		private:
 			/// Perform an asynchronous read operation.
 			void do_read();

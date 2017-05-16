@@ -3,22 +3,49 @@
 #include "stdafx.h"
 #include "server\server.hpp"
 #include "my_log.h"
+#include "arg_parser.h"
 using namespace std;
+
+int printHelp()
+{
+	cout << "usage: h6ocr -i port -o log_dir" << endl;
+	return 0;
+}
 
 int main(int argc, char* argv[])
 {
+	ArgParser parser;
+	parser.parse(argc, argv);
+	if (parser.hasArg("h", "help"))
+	{
+		return printHelp();
+	}
+
+	string port = "12345";
+	string log_dir = "logs";
+
+	if (parser.hasArg("i"))
+	{
+		port = parser.getArg("i");
+	}
+
+	if (parser.hasArg("o"))
+	{
+		log_dir = parser.getArg("o");
+	}
+
+	MyLog::init(log_dir);
+
 	try
 	{
-		string port = "12345";
-		if (argc == 2)
+		http::server::server s("0.0.0.0", port, "");  // 初始化
+
 		{
-			port = argv[1];
+			string tmp = "启动服务\n端口: " + port + "\n日志目录 : " + log_dir + "\n ----------------------";
+			cout << tmp << endl;
+			_INFO(tmp);
 		}
 
-		MyLog::init("d:/logs");
-
-		http::server::server s("0.0.0.0", port, "");  // 初始化
-		_INFO("启动服务  port: " + port);
 		s.run();
 	}
 	catch (std::exception& e)

@@ -4,6 +4,7 @@
 #include "server\server.hpp"
 #include "my_log.h"
 #include "arg_parser.h"
+
 using namespace std;
 
 int printHelp()
@@ -14,6 +15,7 @@ int printHelp()
 
 int main(int argc, char* argv[])
 {
+	/*  解析参数 */
 	ArgParser parser;
 	parser.parse(argc, argv);
 	if (parser.hasArg("h", "help"))
@@ -22,7 +24,7 @@ int main(int argc, char* argv[])
 	}
 
 	string port = "12345";
-	string log_dir = "logs";
+	string log_dir = "d:/logs";
 
 	if (parser.hasArg("i"))
 	{
@@ -34,11 +36,15 @@ int main(int argc, char* argv[])
 		log_dir = parser.getArg("o");
 	}
 
+	/*  初始化LOG系统 */
 	MyLog::init(log_dir);
 
+	/*  启动server服务 */
 	try
 	{
-		http::server::server s("0.0.0.0", port, "");  // 初始化
+
+
+		http::server::server s("0.0.0.0", port, ""); 
 
 		{
 			string tmp = "启动服务\n端口: " + port + "\n日志目录 : " + log_dir + "\n ----------------------";
@@ -46,7 +52,7 @@ int main(int argc, char* argv[])
 			_INFO(tmp);
 		}
 
-		s.run();
+		s.run();  //阻塞
 	}
 	catch (std::exception& e)
 	{

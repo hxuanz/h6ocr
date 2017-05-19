@@ -75,9 +75,6 @@
     <ClInclude Include="blood_ocr.h">
       <Filter>头文件\api</Filter>
     </ClInclude>
-    <ClInclude Include="asr.h">
-      <Filter>头文件\api</Filter>
-    </ClInclude>
     <ClInclude Include="util.h">
       <Filter>头文件\util</Filter>
     </ClInclude>
@@ -95,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="arg_parser.h">
       <Filter>头文件\util</Filter>
+    </ClInclude>
+    <ClInclude Include="asr.h">
+      <Filter>头文件\api</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +128,6 @@
     <ClCompile Include="blood_ocr.cpp">
       <Filter>源文件\api</Filter>
     </ClCompile>
-    <ClCompile Include="asr.cpp">
-      <Filter>源文件\api</Filter>
-    </ClCompile>
     <ClCompile Include="base64.cpp">
       <Filter>源文件\util</Filter>
     </ClCompile>
@@ -148,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="arg_parser.cpp">
       <Filter>源文件\util</Filter>
+    </ClCompile>
+    <ClCompile Include="asr.cpp">
+      <Filter>源文件\api</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

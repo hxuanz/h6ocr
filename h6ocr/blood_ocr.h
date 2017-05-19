@@ -12,7 +12,7 @@ public:
 	}
 	int loadDictionary(string dictionary_string);
 	int recognise(const std::vector<unsigned char>& image_buffer);
-	void Blood_OCR::retrieve(Json::Value& result);
+	void retrieve(Json::Value& result);
 
 protected:	
 	Blood_OCR();

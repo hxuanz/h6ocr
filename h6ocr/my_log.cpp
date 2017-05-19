@@ -1,7 +1,6 @@
 #include "my_log.h"
 #include <ctime>
 
-
 using namespace std;
 
 string MyLog::_file_name = "";
